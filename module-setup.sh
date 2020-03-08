@@ -21,7 +21,11 @@ install() {
 	fi
 
 	if [[ -f "${initdir}/usr/libexec/clevis-luks-askpass" ]]; then
-		sed -i 's|todo=\$|>>/run/show-pw-prompt;todo=$|g' \
+		sed -i 's|((todo++))|>>/run/show-pw-prompt;((todo++))|g' \
+			${initdir}/usr/libexec/clevis-luks-askpass
+		sed -i 's|luks1_decrypt -d|luksmeta load -d|g' \
+			${initdir}/usr/libexec/clevis-luks-askpass
+		sed -i 's/-u "$UUID"/-u "$UUID" | clevis decrypt/g' \
 			${initdir}/usr/libexec/clevis-luks-askpass
 	fi
 }
